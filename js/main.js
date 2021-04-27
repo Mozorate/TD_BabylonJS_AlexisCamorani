@@ -11,8 +11,6 @@ function startGame() {
     engine = new BABYLON.Engine(canvas, true);
     scene = createScene();
 
-
-
     engine.runRenderLoop(() => {
         let deltaTime = engine.getDeltaTime(); // remind you something ?
 
@@ -24,116 +22,48 @@ function createScene() {
     let scene = new BABYLON.Scene(engine);
     let ground = createGround(scene);
 
-    createTank(scene);
-
-    createElvis(scene);
-    createSouris(scene);
-    createTimmy(scene);
+    createCar(scene);
+    createBall(scene);
+    createCage(scene);
     createLights(scene);
 
     return scene;
 }
 
-function createElvis(scene) {
-    BABYLON.SceneLoader.ImportMeshAsync("elvisRun", "../models/", "run.glb", scene).then((result) => {
-
-        var hero = result.meshes[0]; 
-        hero.scaling = new BABYLON.Vector3(20, 20, 20);
-        hero.position = new BABYLON.Vector3(0, 3, 100);
-        hero.name = "elvis";
-        scene.beginAnimation(result.skeletons[0], 0, 100, true, 1.0);
-        var direction = false;
-        scene.registerBeforeRender(function () {
-            if (hero.position.z < 200 && direction) {
-                hero.position.z += 1;
-            }
-            else {
-                if (direction) {
-                    direction = false;
-                    hero.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(180), BABYLON.Space.LOCAL);
-                    console.log("tourneA");
-                }
-            }
-
-            if (hero.position.z > -200 && !direction) {
-                hero.position.z -= 1;
-            }
-            else {
-                if (!direction) {
-                    direction = true;
-                    hero.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(180), BABYLON.Space.LOCAL);
-                    console.log("tourneB");
-                }
-            }
-        });
-    });
-}
-
-function createSouris(scene) {
-    BABYLON.SceneLoader.ImportMeshAsync("souris", "../models/", "souris.glb", scene).then((result) => {
-
-        var souris = result.meshes[0];
-        //Scale the model down        
-        souris.scaling = new BABYLON.Vector3(20, 20, 20);
-        souris.position = new BABYLON.Vector3(200, 5, -200);
-        souris.name = "souris";
-        scene.beginAnimation(result.skeletons[0], 0, 100, true, 1.0);
-        var direction = false;
-        souris.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(90), BABYLON.Space.LOCAL);
-        scene.registerBeforeRender(function () {
-            if (souris.position.x < 300 && direction) {
-                souris.position.x += 0.5;
-            }
-            else {
-                // Swap directions to move left
-                if (direction) {
-                    direction = false;
-                    souris.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(180), BABYLON.Space.LOCAL);
-                    console.log("tourneA");
-                }
-            }
-
-            if (souris.position.x > -400 && !direction) {
-                souris.position.x -= 0.5;
-            }
-            else {
-                if (!direction) {
-                    direction = true;
-                    souris.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(180), BABYLON.Space.LOCAL);
-                    console.log("tourneB");
-                }
-            }
-        });
-    });
-}
-
-function createTimmy(scene) {
-    BABYLON.SceneLoader.ImportMeshAsync("timmy", "../models/", "timmy.glb", scene).then((result) => {
-
-        var timmy = result.meshes[0];
-        //Scale the model down        
-        timmy.scaling = new BABYLON.Vector3(20, 20, 20);
-        timmy.position = new BABYLON.Vector3(-200, 5, 200);
-        timmy.name = "timmy";
-        scene.beginAnimation(result.skeletons[0], 0, 100, true, 1.0);
-        var direction = false;
-    });
-}
-
 function createGround(scene) {
-    const groundOptions = { width: 2000, height: 2000, subdivisions: 20, minHeight: 0, maxHeight: 100, onReady: onGroundCreated };
+    const groundOptions = { width: 6000, height: 4000, subdivisions: 20, minHeight: 0, maxHeight: 100 };
     //scene is optional and defaults to the current scene
-    const ground = BABYLON.MeshBuilder.CreateGroundFromHeightMap("gdhm", 'images/hmap1.png', groundOptions, scene);
-
-    function onGroundCreated() {
-        const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
-        groundMaterial.diffuseTexture = new BABYLON.Texture("images/wood.jpg");
-        ground.material = groundMaterial;
-        // to be taken into account by collision detection
-        ground.checkCollisions = true;
-        //groundMaterial.wireframe=true;
-    }
+    const ground = BABYLON.MeshBuilder.CreateGround("ground", groundOptions);
+    const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
+    groundMaterial.diffuseTexture = new BABYLON.Texture("images/terrainFoot.jpg");
+    ground.material = groundMaterial;
+    // to be taken into account by collision detection
+    ground.checkCollisions = true;
+    //groundMaterial.wireframe=true;
     return ground;
+}
+
+function createCage(scene) {
+    BABYLON.SceneLoader.ImportMeshAsync("cage", "../models/", "cage.glb", scene).then((result) => {
+        var cage1 = result.meshes[0];
+        cage1.scaling = new BABYLON.Vector3(0.75, 0.75, 0.75);
+        cage1.position = new BABYLON.Vector3(-3000, 0, -220);
+        cage1.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(90), BABYLON.Space.LOCAL);
+    });
+
+    BABYLON.SceneLoader.ImportMeshAsync("cage", "../models/", "cage.glb", scene).then((result) => {
+        var cage2 = result.meshes[0];
+        cage2.scaling = new BABYLON.Vector3(0.75, 0.75, 0.75);
+        cage2.position = new BABYLON.Vector3(3000, 0, 180);
+        cage2.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(-90), BABYLON.Space.LOCAL);
+    });
+}
+
+
+function createBall(scene) {
+    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 50, scene);
+    sphere.position.y = 25;
+
 }
 
 function createLights(scene) {
@@ -149,17 +79,17 @@ function createLights(scene) {
     light4.position = new BABYLON.Vector3(-200, 200, 200);
 }
 
-let zMovement = 5;
-function createTank(scene) {
-    // code de la caméra ici https://playground.babylonjs.com/#AHQEIB#17
-    var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI / 2, Math.PI / 4, 10, new BABYLON.Vector3(0, 100, 300), scene);
-    scene.activeCamera = camera1;
-    scene.activeCamera.attachControl(canvas, true);
-    camera1.lowerRadiusLimit = 2;
-    camera1.upperRadiusLimit = 10;
+let zMovement = 2;
+function createCar(scene) {
+    var camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 0, 0), scene);
+    camera.radius = -150;
+    camera.heightOffset = 50;
+    camera.cameraAcceleration = 0.1;
+    camera.maxCameraSpeed = 5;
 
     BABYLON.SceneLoader.ImportMeshAsync("car", "../models/", "car.glb", scene).then((result) => {
         var car = result.meshes[0];
+
 
         car.scaling = new BABYLON.Vector3(30, 30, 30);
         car.position = new BABYLON.Vector3(0, 0, 0);
@@ -167,7 +97,7 @@ function createTank(scene) {
 
         // By default the box/tank is in 0, 0, 0, let's change that...
         car.position.y = 0.6;
-        car.speed = 2;
+        car.speed = 3;
         car.frontVector = new BABYLON.Vector3(0, 0, 1);
 
         var inputMap = {};
@@ -206,7 +136,10 @@ function createTank(scene) {
             }
         });
 
+        camera.lockedTarget = car;
     });
+
+
 }
 
 
