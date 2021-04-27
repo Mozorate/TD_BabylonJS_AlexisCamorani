@@ -1,10 +1,12 @@
-# TD_BabylonJS_AlexisCamorani 
+# TP_FINAL_BabylonJS_Alexis_Camorani 
 
-# Rendu du TP sur Babylon JS avec en rajout : 
+# Rendu du TP final sur Babylon JS 
 
-- Rajout de 3 modeles avec des directions et des animations différentes 
-- Changement du tank en voiture 
- 
-Problèmes : 
-- Problème avec la fixation de la caméra sur la voiture 
-- Bug lors de l'importation des modèle en glb se qui les déforment
+- Le jeu est une version simplifiée du jeu Rocket League. On conduit la voiture en utilisant les touches Z, Q, S et D 
+- La caméra suit la voiture du joueur 
+- Une voiture, 2 cages, un ballon sont représentés
+
+# Problèmes
+
+- Collision entre le ballon et la voiture pas faite
+- Comme les collisions n'ont pas pu etre faite, le fait de marquer un but n'a pas été implémenter aussi
