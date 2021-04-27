@@ -2,7 +2,7 @@
 
 # Rendu du TP final sur Babylon JS 
 
-- Le jeu est une version simplifiée du jeu Rocket League. On conduit la voiture en utilisant les touches Z, Q, S et D 
+- Le jeu est une version simplifiée du jeu Rocket League qui est un jeu de Football avec des voitures. On conduit la voiture en utilisant les touches Z, Q, S et D 
 - La caméra suit la voiture du joueur 
 - Une voiture, 2 cages, un ballon sont représentés
 
